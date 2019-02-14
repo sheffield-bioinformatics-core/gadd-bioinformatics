@@ -408,13 +408,48 @@ View(test)
 test
 ```
 
-Quick sanity checks can also be performed by inspecting details in the environment tab. 
+Quick sanity checks can also be performed by inspecting details in the environment tab. A useful check in RStudio is to use the `head` function, which prints the first 6 rows of the data frame to the screen.
+
+```{r}
+head(gapminder)
+```
+
 
 ## Accessing data in columns
 
-In the next section we will explore in more detail how to control the columns and rows from a data frame that are displayed in RStudio. For now, accessing all the observations from a particular column can be achieved by using the `$` operator.
+In the next section we will explore in more detail how to control the columns and rows from a data frame that are displayed in RStudio. For now, accessing all the observations from a particular column can be achieved by typing the `$` symbol after the name of the data frame followed by the name of a column you are interested in.
+
+RStudio is able to *"tab-complete"* the column name, so typing the following and presssing the **TAB** key will bring-up a list of possible columns. The contents of the column that you select are then printed to the screen.
 
 ```{r}
-gapminder$country
+gapminder$c
 ```
 
+Rather than merely printing to the screen we can also create a variable
+
+```{r}
+country_vec <- gapminder$country
+```
+
+******
+******
+******
+
+
+
+### Exercise
+
+- The function `tail` is similar to `head` except it prints the *last* lines in a file. Use this function to print the last *10* lines in the data frame (you will have to consult the help on `tail` to see how to change the default arguments.)
+- What is the largest observed population?
+- What is the lowest life expectancy
+
+******
+******
+******
+
+
+<div class="alert alert-warning">
+
+**Question: Familiarise yourself with the contents of the data frame. What numerical summaries can you produce from the dataset (e.g. average life expectancy per-year, countries that are most wealthy etc) and what plots might be of interest? Discuss with your neighbours**
+
+</div>

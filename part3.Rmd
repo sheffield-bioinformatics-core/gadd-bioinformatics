@@ -14,8 +14,9 @@ editor_options:
 
 ## Recap
 
-```{r}
-
+```{r message=FALSE}
+library(tidyverse)
+gapminder <- read_csv("raw_data/gapminder.csv")
 ```
 
 
@@ -150,4 +151,74 @@ inner_join(band_members, band_instruments)
 ******
 
 # Using R to analyse RNAi data
+
+
+```{r}
+rnai <- read_csv("rnai.csv")
+View(rnai)
+```
+
+```{r}
+rnai <- mutate(rnai,Row = substr(Well,1,1), Col=substr(Well,2,3))
+rnai
+```
+
+## Plate effects
+
+
+```{r}
+ggplot(rnai, aes(x=as.factor(Plate), y=`FL/RL_rep1`)) + geom_boxplot()
+```
+
+```{r}
+ggplot(rnai, aes(x=Row,y=Col,fill=`FL/RL_rep1`)) + geom_tile() + facet_wrap(~Plate)
+```
+
+```{r}
+filter(rnai,!is.na(`FL/RL_rep1`)) %>% 
+  mutate(`FL/RL_Av` = as.numeric(`FL/RL_Av`)) %>% 
+  ggplot(aes(x=Row,y=Col,fill=`FL/RL_Av`)) + geom_tile() + facet_wrap(~Plate)
+```
+
+
+## Re-computing averages
+
+```{r}
+rnai_averages <- dplyr::select(rnai, Plate, Well,GeneSymbol,contains("rep")) %>% 
+  gather(key = Sample,value=Value,-(Plate:GeneSymbol)) %>% 
+  separate(Sample, into=c("Sample","Rep"),sep="_") %>% 
+  group_by(Plate,Well,GeneSymbol,Sample) %>% summarise(Ave=mean(Value)) %>% 
+  spread(Sample,Ave) 
+```
+
+```{r}
+filter(rnai_averages,RL < 16) %>% 
+  mutate(Label = ifelse(abs(`FL/RL`)>4,GeneSymbol,"")) %>% 
+ggplot(aes(x = RL, y= FL,col=`FL/RL`,label=Label)) + geom_point(alpha=0.4)
+```
+
+
+```{r}
+filter(rnai,!is.na(`FL/RL_rep1`)) %>% 
+  mutate(`FL/RL_Av` = as.numeric(`FL/RL_Av`)) %>% 
+  arrange(desc(`FL/RL_Av`))
+
+
+```
+
+
+```{r}
+library(biomaRt)
+genes_of_interest <-rnai$GeneID
+ensembl <- useEnsembl(biomart = "ensembl",
+                      dataset = "dmelanogaster_gene_ensembl")
+
+anno <- getBM(c("ensembl_gene_id","external_gene_name", "hsapiens_homolog_ensembl_gene","hsapiens_homolog_associated_gene_name","hsapiens_homolog_orthology_confidence"), "external_gene_name", genes_of_interest, ensembl) %>% 
+  rename(GeneID = external_gene_name)
+```
+
+
+```{r}
+rnai <- left_join(rnai, anno, by="GeneID")
+```
 

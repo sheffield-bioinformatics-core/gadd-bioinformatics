@@ -34,6 +34,18 @@ You can download the binary files for your distribution from CRAN. Or you can us
 ## Materials
 
 - [Introductory lecture](intro_slides.html)
-- [Monday 18th February](part1.html)
-- [Wednesday 20th February](part2.html)
-- [Friday 22nd February](part3.html)
+- [Monday 18th February](part1.nb.html)
+- [Wednesday 20th February](part2.nb.html)
+- [Friday 22nd February](part3.nb.html)
+
+## Useful links
+
+- [dplyr cheatsheet](https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf)
+- [ggplot cheatsheet](https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
+- [Keith Baggerly talk on Reproducible Research](https://www.youtube.com/embed/7gYIs7uYbMo)
+- [Tidyverse website](https://www.tidyverse.org/)
+- [RStudio cheatsheets](https://www.rstudio.com/resources/cheatsheets/)
+- [R graph gallery](https://www.r-graph-gallery.com/0)
+- [Sheffield R meetup](https://www.meetup.com/SheffieldR-Sheffield-R-Users-Group/)
+- [Stack Overflow](https://stackoverflow.com/questions/tagged/r)
+- [R bloggers](https://www.r-bloggers.com/)

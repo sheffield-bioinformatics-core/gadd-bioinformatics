@@ -16,7 +16,7 @@ editor_options:
 
 We should have loaded the `tidyverse` library and imported an example dataset into R
 
-```{r}
+```{r message=FALSE}
 library(tidyverse)
 gapminder <- read_csv("raw_data/gapminder.csv")
 ```
@@ -137,12 +137,12 @@ filter(gapminder, country == "Zambia", lifeExp < 40)
 
 - Create a subset of the data where the population less than a million in the year 2002
 - Create a subset of the data where the life expectancy is greater than 75 in the years prior to 1987
-- Create a subset of the data for countries beginning with the letter `S` in Africa
-    + HINT: the function `substr` can be used to 
+
 
 ```{r}
-filter(gapminder,substr(country,1,1)== "S",continent=="Africa")
+?substr
 ```
+
 
 
 
@@ -323,7 +323,7 @@ library(ggplot2)
 ggplot(data = gapminder)
 ```
 
-For the aesthetics, as a bare minimum we will map the `gdpPercap` and `lifeExp` to the x- and y-axis of the plot
+For the aesthetics, as a bare minimum we will map the `gdpPercap` and `lifeExp` to the x- and y-axis of the plot. Some progress is made; we at least get axes
 
 ```{r}
 ggplot(data = gapminder,aes(x=gdpPercap, y=lifeExp))
