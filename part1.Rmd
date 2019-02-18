@@ -421,7 +421,7 @@ In the next section we will explore in more detail how to control the columns an
 
 RStudio is able to *"tab-complete"* the column name, so typing the following and presssing the **TAB** key will bring-up a list of possible columns. The contents of the column that you select are then printed to the screen.
 
-```{r}
+```{r eval=FALSE}
 gapminder$c
 ```
 
