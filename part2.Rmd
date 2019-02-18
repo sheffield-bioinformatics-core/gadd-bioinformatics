@@ -139,12 +139,6 @@ filter(gapminder, country == "Zambia", lifeExp < 40)
 - Create a subset of the data where the life expectancy is greater than 75 in the years prior to 1987
 
 
-```{r}
-?substr
-```
-
-
-
 
 ******
 ******
