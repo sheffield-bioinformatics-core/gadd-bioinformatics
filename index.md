@@ -35,8 +35,8 @@ You can download the binary files for your distribution from CRAN. Or you can us
 
 - [Introductory lecture](intro_slides.html)
 - [Monday 18th February](part1.nb.html)
-- [Wednesday 20th February](part2.nb.html)
-- [Friday 22nd February](part3.nb.html)
+- Wednesday 20th February
+- Friday 22nd February
 
 ## Useful links
 
