@@ -35,7 +35,7 @@ A example dataset and blank R markdown file to make note are avialable from [thi
 
 - [Introductory lecture](intro_slides.html)
 - [Monday 18th February](part1.nb.html)
-- Wednesday 20th February
+- [Wednesday 20th February](part2.nb.html)
 - Friday 22nd February
 
 ## Useful links
