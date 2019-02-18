@@ -29,7 +29,7 @@ You can download the binary files for your distribution from CRAN. Or you can us
 
 ## Data Download
 
-A example dataset and blank R markdown file to make note are avialable from [this link](CourseData.zip). Please down and *extract* the zip file into a folder that you wish to work in.
+A example dataset and blank R markdown file to make note are avialable from [this link](https://github.com/sheffield-bioinformatics-core/gadd-bioinformatics/raw/master/CourseData.zip). Please down and *extract* the zip file into a folder that you wish to work in.
 
 ## Materials
 
@@ -42,10 +42,10 @@ A example dataset and blank R markdown file to make note are avialable from [thi
 
 - [dplyr cheatsheet](https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf)
 - [ggplot cheatsheet](https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
-- [Keith Baggerly talk on Reproducible Research](https://www.youtube.com/embed/7gYIs7uYbMo)
 - [Tidyverse website](https://www.tidyverse.org/)
 - [RStudio cheatsheets](https://www.rstudio.com/resources/cheatsheets/)
 - [R graph gallery](https://www.r-graph-gallery.com/0)
 - [Sheffield R meetup](https://www.meetup.com/SheffieldR-Sheffield-R-Users-Group/)
 - [Stack Overflow](https://stackoverflow.com/questions/tagged/r)
 - [R bloggers](https://www.r-bloggers.com/)
+- [Keith Baggerly talk on Reproducible Research](https://www.youtube.com/embed/7gYIs7uYbMo)
