@@ -29,7 +29,7 @@ You can download the binary files for your distribution from CRAN. Or you can us
 
 ## Data Download
 
-
+A example dataset and blank R markdown file to make note are avialable from [this link](CourseData.zip). Please down and *extract* the zip file into a folder that you wish to work in.
 
 ## Materials
 
