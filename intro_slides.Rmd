@@ -47,6 +47,7 @@ knitr::opts_chunk$set(echo = FALSE)
 - Reporting
 - Joining data from multiple spreadsheets
 
+
 ## Packages covered
 
 - We will cover a very small set of packages - the **tidyverse**
@@ -74,7 +75,6 @@ _Image Credit:_ [***Aberdeen Study Group***](https://aberdeenstudygroup.github.i
 - Live coding
     + no more slides!
 - Exercises
-    + sticky notes to indicate progress
 - You can view the course notes [online](http://sbc.shef.ac.uk/gadd-bioinformatics/) if you miss anything
 
 ## Course Data
