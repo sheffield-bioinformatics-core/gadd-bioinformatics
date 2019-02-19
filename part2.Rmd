@@ -157,6 +157,13 @@ mutate(gapminder, PopInMillions = pop / 1e6,
 
 ```
 
+If we want to rename existing columns, and not create any extra columns, we can use the `rename` function.
+
+```{r}
+rename(gapminder, GDP=gdpPercap)
+```
+
+
 ### Ordering and sorting
 
 The whole data frame can be re-ordered according to the values in one column using the `arrange` function. So to order the table according to population size:-
@@ -185,6 +192,8 @@ arrange(gapminder, year, pop)
 ```
 
 
+
+
 ### saving data frames
 
 A final point on data frames is that we can **write them to disk once we have done our data processing**. 
@@ -211,12 +220,14 @@ We will now try an exercise that involves using several steps of these operation
 #### Exercise
 
 - Filter the data to include just observations from the year 2002
-- Order the table by increasing life expectancy
+- Re-arrange the table so that the countries from each continent are ordered according to decreasing wealth. i.e. the wealthiest countries first
 - Remove the year column from the resulting data frame
 - Write the data frame out to a file in `data/` folder
 
-```{r}
-
+```{r echo=FALSE}
+filter(gapminder, year==2002) %>% 
+  arrange(continent, desc(gdpPercap)) %>% 
+  select(-year)
 
 
 ```
@@ -238,6 +249,7 @@ The following is perfectly valid R code, but invites the user to make mistakes w
 ```{r}
 tmp <- filter(gapminder, continent == "Europe")
 tmp2 <- select(tmp, -continent)
+tmp2
 ```
 
 Those familiar with Unix may recall that commands can be joined with a pipe; `|`
@@ -366,6 +378,13 @@ Counts with a barplot
 ggplot(gapminder, aes(x=continent)) + geom_bar()
 ```
 
+The height of the bars can also be mapped directly to numeric variables in the data frame if the `stat="identity"` argument is set within `geom_bar`. Note that the axis labels can be modified, as we will see later on.
+
+```{r}
+gapminder2002 <- filter(gapminder, year==2002,continent=="Americas")
+ggplot(gapminder2002, aes(x=country,y=gdpPercap)) + geom_bar(stat="identity")
+```
+
 Where appropriate, we can add multiple layers of `geom`s to the plot. For instance, a criticism of the boxplot is that it does not show all the data. We can rectify this by overlaying the individual points.
 
 ```{r}
@@ -468,9 +487,14 @@ library(RColorBrewer)
 display.brewer.all()
 ```
 
+When experimenting with colour palettes and labels, it is useful to save the plot as an object
+```{r}
+p <- ggplot(gapminder, aes(x = gdpPercap, y=lifeExp,col=continent)) + geom_point()
+```
+
 
 ```{r}
-ggplot(gapminder, aes(x = gdpPercap, y=lifeExp,col=continent)) + geom_point() + scale_color_brewer(palette = "Set2")
+p + scale_color_brewer(palette = "Set2")
 ```
 
 Or we can even specify our own colours; such as The University of Sheffield branding colours
@@ -481,16 +505,11 @@ my_pal <- c(rgb(0,159,218,maxColorValue = 255),
             rgb(249,227,0,maxColorValue = 255),
             rgb(0,155,72,maxColorValue = 255),
             rgb(190,214,0,maxColorValue = 255))
-ggplot(gapminder, aes(x = gdpPercap, y=lifeExp,col=continent)) + geom_point() + scale_color_manual(values=my_pal)
+p + scale_color_manual(values=my_pal)
 
 ```
 
-You will often see `ggplots` saved as a variable, which allows us to experiement with some of the layouts, themes and plotting options.
 
-```{r}
-p <- ggplot(gapminder, aes(x = gdpPercap, y=lifeExp,col=continent)) + geom_point() + scale_color_brewer(palette = "Set2")
-p
-```
 
 Various labels can be modified using the `labs` function.
 
@@ -526,14 +545,14 @@ One very useful feature of ggplot is faceting. This allows you to produce plots 
 To facet our data into multiple plots we can use the `facet_wrap` or `facet_grid` function and specify the variable we split by. 
 
 ```{r}
-ggplot(gapminder, aes(x = gdpPercap, y=lifeExp,col=continent)) + geom_point() + facet_wrap(~continent)
+p + facet_wrap(~continent)
 
 ```
 
 The `facet_grid` function will create a grid-like plot with one variable on the x-axis and another on the y-axis.
 
 ```{r fig.width=12}
-ggplot(gapminder, aes(x = gdpPercap, y=lifeExp,col=continent)) + geom_point() + facet_grid(continent~year)
+p + facet_grid(continent~year)
 ```
 
 

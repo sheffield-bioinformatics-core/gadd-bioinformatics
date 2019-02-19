@@ -93,6 +93,29 @@ filter(gapminder, country %in% c("Rwanda","Zambia","Zimbabwe")) %>%
   ggplot(aes(x=year, y=lifeExp,col=country)) + geom_line()
 ``` 
 
+******
+******
+******
+
+### Exercise 
+
+- Produce a plot to show the change in average `gdpPercap` over time.
+- see below for a suggestion
+
+******
+******
+******
+
+
+
+
+
+```{r echo=FALSE}
+gapminder %>% group_by(year,continent) %>% 
+  summarise(Wealth=mean(gdpPercap)) %>% ggplot(aes(x=year,y=Wealth,fill=continent)) + geom_bar(stat="identity") + facet_wrap(~continent)
+```
+
+
 # Joining
 
 In many real life situations, data are spread across multiple tables or spreadsheets. Usually this occurs because different types of information about a subject, e.g. a patient, are collected from different sources. It may be desirable for some analyses to combine data from two or more tables into a single data frame based on a common column, for example, an attribute that uniquely identifies the subject.
