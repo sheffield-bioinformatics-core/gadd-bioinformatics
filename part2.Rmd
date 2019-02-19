@@ -137,7 +137,8 @@ filter(gapminder, country == "Zambia", lifeExp < 40)
 
 - Create a subset of the data where the population less than a million in the year 2002
 - Create a subset of the data where the life expectancy is greater than 75 in the years prior to 1987
-
+- (EXTRA)
+- Data for countries whose name begins with the letter `Z`. You might want to investigate the usage of the `substr` function.
 
 
 ******
