@@ -49,7 +49,7 @@ summarise(MinLifeExpectancy = min(lifeExp),
           Correlation = cor(year, lifeExp))
 ```
 
-However, it is not particularly useful to calculate such values from the entire table as we have different continents and years. The `group_by` function allows us to split the table into different categories, and compute summary statistics. We can group the data according to year and compute the 
+However, it is not particularly useful to calculate such values from the entire table as we have different continents and years. The `group_by` function allows us to split the table into different categories, and compute summary statistics for each year (for example).
 
 ```{r}
 gapminder %>% 
@@ -58,6 +58,17 @@ gapminder %>%
               MaximumGDP = max(gdpPercap), 
               AveragePop = mean(pop))
 ```
+
+Other summary statistics that can be useful include `first` and `last` which are used to report the first and last values for a particular group. For instance, we might want to look at the increase in wealth over time for each country by extracting their `gdpPercap` in `1952` and `2007`.
+
+```{r}
+gapminder %>% 
+  group_by(country) %>% 
+  arrange(year) %>% 
+summarise(StartGDP = first(gdpPercap), EndGDP = last(gdpPercap), GDPIncrease = EndGDP - StartGDP)
+
+```
+
 
 The nice thing about `summarise` is that it can followed up by any of the other `dplyr` verbs that we have met so far (`select`, `filter`, `arrange`..etc). 
 
@@ -99,20 +110,24 @@ filter(gapminder, country %in% c("Rwanda","Zambia","Zimbabwe")) %>%
 
 ### Exercise 
 
-- Produce a plot to show the change in average `gdpPercap` over time.
+- Produce a plot to show the change in average `gdpPercap` for each continent over time.
 - see below for a suggestion
+    + HINT: you will need to specifiy the `stat=identity` option when creating the bar plot
+    
+```{r eval=FALSE}
+......+ geom_bar(stat="identity")
+```
 
 ******
 ******
 ******
-
 
 
 
 
 ```{r echo=FALSE}
 gapminder %>% group_by(year,continent) %>% 
-  summarise(Wealth=mean(gdpPercap)) %>% ggplot(aes(x=year,y=Wealth,fill=continent)) + geom_bar(stat="identity") + facet_wrap(~continent)
+  summarise(Wealth=mean(gdpPercap)) %>% ggplot(aes(x=year,y=Wealth,fill=continent)) + geom_bar(stat="identity")  + facet_wrap(~continent)
 ```
 
 
@@ -153,20 +168,24 @@ right_join(band_members, band_instruments)
 ```{r}
 inner_join(band_members, band_instruments)
 ```
+
+
 ******
 ******
 ******
+
+
 
 ### Exercise (open-ended)
 
 - The file `medal_table.csv` in the `raw_data/` project sub-directory contains data about how many medals how been won by various countries at the Beijing summer olympics of 2008.
 - Read this csv file into R and join with the `gapminder` data from 2007
 - What interesting summaries / plots can you make from the data? For example...
-  + what countries have the greatest percentage of gold medals (ignore countries with too few medals)
+  + what countries have the greatest proportion of gold medals (ignore countries with too few medals)
   + calculate the number of medals won per million people and re-arrange by this new measure. What countries perform best?
   + how similar is the distribution of total medals between continents?
   + do countries with a larger population tend to win more medals?
-  + do countries with larger GDP tend to win more medals
+  + do countries with larger GDP tend to win more medals?
   + are these trends consistent among different continents?
   
 ******
@@ -197,58 +216,54 @@ rnai <- read_csv("rnai.csv")
 rnai
 ```
 
-```{r}
-rnai <- mutate(rnai,Row = substr(Well,1,1), Col=substr(Well,2,3))
-rnai
-```
-
-## Plate effects
-
+As a quality control measure, we can look at the signal from each plate and make sure there are no systematic differences. This could be visualised as a boxplot with `geom_boxplot` as we have seen before.
 
 ```{r}
 ggplot(rnai, aes(x=as.factor(Plate), y=`FL/RL_rep1`)) + geom_boxplot()
 ```
 
+We also have some positional information at our disposal that could be of interest. This is encoded in the well name, but we can split the well name into a row and column ID using a `mutate` command with `substr` to extract the letter and number of the well.
+
 ```{r}
+rnai <- mutate(rnai,Row = substr(Well,1,1), Col=substr(Well,2,3))
+rnai
+```
+
+This can be visualised using a type of `geom` that we haven't seen before called `geom_tile` that produces a "heatmap" style of plot.
+
+```{r fig.width=12}
 ggplot(rnai, aes(x=Row,y=Col,fill=`FL/RL_rep1`)) + geom_tile() + facet_wrap(~Plate)
 ```
 
-```{r}
-filter(rnai,!is.na(`FL/RL_rep1`)) %>% 
-  mutate(`FL/RL_Av` = as.numeric(`FL/RL_Av`)) %>% 
-  ggplot(aes(x=Row,y=Col,fill=`FL/RL_Av`)) + geom_tile() + facet_wrap(~Plate)
-```
+******
+******
+******
 
+### Exercise
 
-## Re-computing averages
+- Try and re-produce the `geom_boxplot` and `geom_tile` above with the `FL/RL_Av` column instead of `FL/RL_Rep1`
+    + R will struggle to produce the plot. Look at the contents of this column and think about why this might happen?
+- Apply appropriate filtering to the data in order to produce a boxplot of the `FL/RL_Av` values for each Plate
+    + HINT: the R code `!is.na` can be used to check identify what rows do not contain an `NA` value in a particular column
+    
+******
+******
+******
 
-```{r}
-rnai_averages <- dplyr::select(rnai, Plate, Well,GeneSymbol,contains("rep")) %>% 
-  gather(key = Sample,value=Value,-(Plate:GeneSymbol)) %>% 
-  separate(Sample, into=c("Sample","Rep"),sep="_") %>% 
-  group_by(Plate,Well,GeneSymbol,Sample) %>% summarise(Ave=mean(Value)) %>% 
-  spread(Sample,Ave) 
-```
-
-```{r}
-filter(rnai_averages,RL < 16) %>% 
-  mutate(Label = ifelse(abs(`FL/RL`)>4,GeneSymbol,"")) %>% 
-ggplot(aes(x = RL, y= FL,col=`FL/RL`,label=Label)) + geom_point(alpha=0.4)
-```
-
+Before proceeding to further analysis we can clean the dataset so that we only have the gene identifiers and average `FL` and `RL` values as columns.
 
 ```{r}
-filter(rnai,!is.na(`FL/RL_rep1`)) %>% 
-  mutate(`FL/RL_Av` = as.numeric(`FL/RL_Av`)) %>% 
-  arrange(desc(`FL/RL_Av`))
-
-
+rnai_cleaned <- filter(rnai, !is.na(BKN)) %>% 
+  mutate(FL=as.numeric(`FL_Av`), RL=as.numeric(`RL_Av`), Ratio = as.numeric(`FL/RL_Av`)) %>% 
+  select(GeneSymbol, GeneID,FL,RL,Ratio)
+rnai_cleaned
 ```
 
+The Gene identifiers are not particularly useful by themselves but we can use resources such as [Biomart](https://www.ensembl.org/biomart) to map these to more recognisable names, and also obtain homologous human genes. The `biomaRt` package is able to perform the mapping, and without going into too much detail here is the code to do so.
 
 ```{r message=FALSE}
 library(biomaRt)
-genes_of_interest <-rnai$GeneID
+genes_of_interest <-rnai_cleaned$GeneID
 ensembl <- useEnsembl(biomart = "ensembl",
                       dataset = "dmelanogaster_gene_ensembl")
 
@@ -256,8 +271,37 @@ anno <- getBM(c("ensembl_gene_id","external_gene_name", "hsapiens_homolog_ensemb
   rename(GeneID = external_gene_name)
 ```
 
+This can now be joined to the cleaned dataset using the `left_join` command from before.
 
 ```{r}
-rnai <- left_join(rnai, anno, by="GeneID")
+rnai_cleaned <- left_join(rnai_cleaned, anno)
+rnai_cleaned
 ```
+
+A basic scatter plot of `FL` and `RL` reveals some extreme values in the dataset.
+
+```{r}
+ggplot(rnai_cleaned, aes(x = FL, y = RL,col=Ratio)) + geom_point()
+
+```
+
+******
+******
+******
+
+### Exercise
+
+- Identify the names of the genes that have extreme `RL` or `FL` values
+- Produce a version of the plot that has the name of these genes labelled
+    + check the identity of these genes. Do they have any biological significance?
+
+```{r echo=FALSE}
+ggplot(rnai_cleaned, aes(x = FL, y = RL,col=Ratio)) + geom_point() + geom_text(data= filter(rnai_cleaned, FL>8 | RL > 100),aes(label=GeneID),col="black")
+```
+
+- Decide on suitable cut-offs on the ratio of `RL` to `FL` to identify genes of interest
+- Write the rows corresponding to these genes to a csv file for further processing
+
+
+
 
